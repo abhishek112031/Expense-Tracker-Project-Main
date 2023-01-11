@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily Expenses</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <style>
+    body {
+      background-image: url("https://cdn.pixabay.com/photo/2015/04/28/12/29/white-743495__340.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-secondary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Day to Day Expenses</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+        </ul>
+        <a class="text-decoration-none btn btn-outline-dark text-white me-4" href="/user/sign-up">Sign Up</a>
+        <a class="text-decoration-none btn btn-outline-dark text-white me-2" href="/user/login">Log In</a>
+        <button id="rzp-button" class="btn btn-outline-primary btn-warning me-2">Buy Premium</button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="premium" class="container">
+
+  </div>
+
+  <h1 class="display-5 text-center text-primary">Day-to-Day-Expenses:</h1>
+
+  <div class="row mt-4 justify-content-center">
+    <div class="col-sm-4 ">
+      <form onsubmit="saveToDatabase(event)">
+
+        <label class="text-dark fw-bold" for="expenseAmount">*Expense Amount:</label>
+        <input class="form-control mb-3 border-warning border-3" type="number" name="expenseAmount" id="expenseAmount"
+          required>
+
+        <label class="text-dark fw-bold" for="description">*Description:</label>
+        <input class="form-control mb-3 border-warning border-3" type="text" name="description" id="description"
+          required>
+
+        <label class="fw-bold text-dark" for="category">*Choose Category:</label>
+        <select class="form-control border-warning border-3 " name="category" id="category" required>
+          <option value="Grocery">Grocery</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Food">Food</option>
+          <option value="Movies">Movies</option>
+          <option value="Garments">Garments</option>
+          <option value="Medicines">Medicines</option>
+          <option value="Others">Others</option>
+        </select>
+        <button class="btn btn-outline-dark btn-info mt-2">Add Expense</button>
+
+      </form>
+    </div>
+    <div class="col-sm-4">
+      <button id="show-board" class="btn btn-outline-dark mb-4">Show Leader-Board:</button>
+      <ul id="lboard"></ul>
+    </div>
+  </div>
+
+  <!-- show leader-board -->
+
+
+
+  <!-- list of all expenses -->
+  <div id="main" class="container-lg justify-content-center mt-4">
+    <h3 class="display-6 text-dark text-center  fst-italic">All Expense(s):</h3>
+    <div class="row justify-content-center" id="exp"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
+  <script>
+
+
+    function saveToDatabase(event) {
+      event.preventDefault();
+      // const expenseAmount = event.target.expenseAmount.value;
+      // const description = event.target.description.value;
+      // const category = event.target.category.value;
+      const token = localStorage.getItem('token');
+      const expenses = {
+        expenseAmount: event.target.expenseAmount.value,
+        description: event.target.description.value,
+        category: event.target.category.value,
+
+      };
+
+
+      axios.post('http://localhost:3000/user/add-daily-expenses', expenses, { headers: { "Authorization": token } })
+        .then((response) => {
+
+          showExpensesOnScreen(response.data);
+        })
+        .catch((err) => {
+
+        })
+
+
+    }
+    function PremiumUserTitle(premiumUser) {
+      document.getElementById('premium').innerHTML = `<h5 class="text-center text-success border border-dark border-opacity-25 border-3 rounded-pill bg-warning">Hi ${premiumUser.data.name}, ${premiumUser.data.message}</h5>`
+      document.getElementById('rzp-button').style.visibility="hidden";
+
+    }
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      let token = localStorage.getItem('token');
+      async function get() {
+        try {
+          let premiumUser = await axios.get('http://localhost:3000/premium-user', { headers: { "Authorization": token } });
+          console.log(premiumUser);
+          if (premiumUser.status===200){
+            PremiumUserTitle(premiumUser);
+          }
+
+          
+
+          let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
+
+          for (let i = 0; i < getResponse.data.length; i++) {
+
+            showExpensesOnScreen(getResponse.data[i]);
+
+          }
+
+
+        }
+        catch (err) {
+          document.body.innerHTML += `<h5 class="text-center">1st ON REFRESH:something went wrong::ref${err}</h5>`
+
+
+        }
+
+      }
+      get();
+
+
+    });
+
+
+    function showExpensesOnScreen(expense) {
+
+
+      document.getElementById("expenseAmount").value = "";
+      document.getElementById("description").value = "";
+      document.getElementById("category").value = "";
+
+
+
+      const parent_node = document.getElementById("exp");
+      const child_node = `<div id=${expense.id} class="justify-content-center mt-3 ms-2 rounded border border-secondary col-md-3"><div class="col align-item-center ">
+        <h3 class="text-dark text-center">${expense.description}</h3>
+        <h4 class="text-primary fst-italic text-center">Amount: <span class="text-danger ">${expense.expenseAmount}</span> ₹</h4>
+        <h5 class="text-dark text-center fst-italic">Category:  ${expense.category}</h5>
+        <div class="row"><button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger">Delete</button></div>
+        </div></div>`;
+
+      parent_node.innerHTML = parent_node.innerHTML + child_node;
+
+    }
+    function deleteExpense(expId) {
+      const token = localStorage.getItem('token');
+      if (confirm(`Are you sure to delete this Expense?`) === true) {
+        async function deleted() {
+          try {
+            let res = await axios.delete(`http://localhost:3000/user/expenses/delete/${expId}`, { headers: { "Authorization": token } })
+            removeFromScreen(expId);
+          }
+          catch (err) {
+            document.body.innerHTML += `<h3 class="text-center">1st ON delete:something went wrong::ref${err}</h3>`
+
+          }
+
+        }
+        deleted();
+
+
+      }
+
+    }
+    function removeFromScreen(expId) {
+      const parent = document.getElementById("exp");
+      const child = document.getElementById(expId);
+      if (child) {
+        parent.removeChild(child);
+
+      }
+    }
+
+
+
+    //for razorpay:--->
+    document.getElementById('rzp-button').onclick = async function (e) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3000/user/purchase/premium-membership', { headers: { "Authorization": token } });
+
+        var options = {
+          "key": response.data.key_id,
+          "order_id": response.data.order.id,
+          //this handler function handle payment success
+          "handler": async function (response) {
+
+            await axios.post('http://localhost:3000/user/purchase/updateTrasactionStatus', {
+              order_id: options.order_id,
+              payment_id: response.razorpay_payment_id
+            },
+              {
+                headers: { "Authorization": token }
+
+              });
+
+            alert('you are a premium user now!');
+
+            document.getElementById('premium').innerHTML = `<h5 class="text-center text-success border border-dark border-opacity-25 border-3 rounded-pill bg-warning">You are A Premium User</h5>`
+            document.getElementById('rzp-button').style.visibility="hidden";
+
+
+          }
+
+        }
+
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+        rzp1.on('payment.failed', async function (response) {
+          try {
+            await axios.post('http://localhost:3000/user/purchase/updateTrasactionStatusFailed', {
+              order_id: options.order_id,
+              payment_id: response.razorpay_payment_id
+            },
+              {
+                headers: { "Authorization": token }
+
+              });
+
+            alert('something went wrong')
+          }
+          catch (err) {
+
+          }
+        })
+      }
+      catch (err) {
+        console.log(err.response.data.message);
+        document.body.innerHTML += `<h5 class="text-center text-danger">Error:${err.response.data.message}</h5>`
+      }
+
+    }
+
+    //for leader-board:-->
+    document.getElementById('show-board').onclick = async function () {
+      try {
+        const token = localStorage.getItem('token');
+        let resp = await axios.get('http://localhost:3000/premium/leader-board', { headers: { "Authorization": token } })
+        console.log(resp.data);
+        resp.data.forEach(data => {
+          console.log(data);
+          showLeaderBoardOnScreen(data);
+        })
+
+      }
+      catch (err) {
+
+      }
+    }
+
+    function showLeaderBoardOnScreen(data) {
+      const parentElem = document.getElementById('lboard');
+      childElem = `<li mt-4 class="border border-warning border-2 rounded bg-primary">Name: ${data.Name} & Total_Expenses: ${data.Total_Expense} ₹ </li>`;
+      parentElem.innerHTML += childElem;
+    }
+
+
+
+
+
+  </script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
