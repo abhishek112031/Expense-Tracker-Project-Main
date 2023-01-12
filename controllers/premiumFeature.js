@@ -1,6 +1,8 @@
 const Expense=require('../models/expenses');
 const User=require('../models/user');
 const sequelize = require('../util/database');
+const path=require('path');
+const rootDir=require('../util/path');
 
 exports.premiumUser=async (req,res)=>{
     try{
@@ -8,6 +10,7 @@ exports.premiumUser=async (req,res)=>{
    if(req.user.isPremiumUser){
     return res.status(200).json({success:true,message:'You Are A Premium User' ,name:req.user.name})
    }
+   
 
 
 }
@@ -97,3 +100,11 @@ exports.premiumLeaderBoard=async(req,res)=>{
 //         console.log("err===>",err);
 //     }
 // }
+
+
+
+
+//exppenses on time frame:--->
+exports.getExpenseOnTimeFramePage=(req,res,next)=>{
+    res.sendFile(path.join(rootDir, 'views', 'expenses-timeFrame.html'));
+}

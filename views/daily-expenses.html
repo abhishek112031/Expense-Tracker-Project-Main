@@ -30,6 +30,9 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
+          <li id="exp-premium" class="nav-item">
+            
+          </li>
         </ul>
         <a class="text-decoration-none btn btn-outline-dark text-white me-4" href="/user/sign-up">Sign Up</a>
         <a class="text-decoration-none btn btn-outline-dark text-white me-2" href="/user/login">Log In</a>
@@ -122,6 +125,11 @@
     function PremiumUserTitle(premiumUser) {
       document.getElementById('premium').innerHTML = `<h5 class="text-center text-success border border-dark border-opacity-25 border-3 rounded-pill bg-warning">Hi ${premiumUser.data.name}, ${premiumUser.data.message}</h5>`
       document.getElementById('rzp-button').style.visibility="hidden";
+      const parent=document.getElementById('exp-premium');
+      const child=`<a class="btn btn-outline-warning" href="/user/premium/expense-timeframe">Expenditure Time Frame</a>`;
+      parent.innerHTML=child;
+     
+      
 
     }
 
@@ -133,11 +141,10 @@
           let premiumUser = await axios.get('http://localhost:3000/premium-user', { headers: { "Authorization": token } });
           console.log(premiumUser);
           if (premiumUser.status===200){
+            
             PremiumUserTitle(premiumUser);
           }
-
-          
-
+      
           let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
 
           for (let i = 0; i < getResponse.data.length; i++) {
@@ -293,7 +300,8 @@
       childElem = `<li mt-4 class="border border-warning border-2 rounded bg-primary">Name: ${data.Name} & Total_Expenses: ${data.Total_Expense} ₹ </li>`;
       parentElem.innerHTML += childElem;
     }
-
+  //expTimeframe:--->
+  // document.getElementById("expTf").disabled = true;
 
 
 

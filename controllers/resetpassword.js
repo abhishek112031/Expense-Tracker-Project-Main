@@ -24,7 +24,7 @@ exports.forgotpassword = async (req, res) => {
         console.log("------>>>>>",email);
         if(user){
             const id = uuid.v4();
-            user.createForgotpassword({ id , active: true })
+            user.createForgotpassword({ id , active: true }) 
                 .catch(err => {
                     throw new Error(err)
                 })
