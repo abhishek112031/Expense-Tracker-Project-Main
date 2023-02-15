@@ -68,24 +68,41 @@ catch(err){
 
 
 //trial2:-->
+// exports.premiumLeaderBoard=async(req,res)=>{
+//     try{
+//       const aggrigated_expenses= await User.findAll({
+//         attributes:['id','name',[sequelize.fn('sum',sequelize.col('expenses.expenseAmount')),'Total_Expense']],
+//         include:[
+//             {
+//                 model:Expense,
+//                 attributes:[]
+//             }
+//         ],
+//         group:['user.id'],
+//         order:[['Total_Expense','DESC']]
+
+//       });
+   
+    
+
+//     res.status(200).json(aggrigated_expenses);
+
+//     }
+//     catch(err){
+//         console.log("err===>",err);
+//     }
+// }
+
+//trial:-3
 exports.premiumLeaderBoard=async(req,res)=>{
     try{
       const aggrigated_expenses= await User.findAll({
-        attributes:['id','name',[sequelize.fn('sum',sequelize.col('expenses.expenseAmount')),'Total_Expense']],
-        include:[
-            {
-                model:Expense,
-                attributes:[]
-            }
-        ],
-        group:['user.id'],
-        order:[['Total_Expense','DESC']]
+       
+        order:[['totalExpenses','DESC']]
 
       });
-    //   const user_exp= await Expense.findAll({
-    //     attributes:['userId',[sequelize.fn('sum',sequelize.col('expense.expenseAmount')),'Total_Expense']],
-    //     group:['userId']
-    //   });
+      console.log("exp-------->",aggrigated_expenses[0]);
+ 
     
 
     res.status(200).json(aggrigated_expenses);

@@ -240,6 +240,7 @@
               });
 
             alert('you are a premium user now!');
+            showLeaderBoard()
 
             document.getElementById('premium').innerHTML = `<h5 class="text-center text-success border border-dark border-opacity-25 border-3 rounded-pill bg-warning">You are A Premium User</h5>`
             document.getElementById('rzp-button').style.visibility="hidden";
@@ -308,7 +309,7 @@
 
     function showLeaderBoardOnScreen(data) {
       let parentElem = document.getElementById('lboard');
-      let childElem = `<li mt-4 class="border border-warning border-2 rounded bg-primary">Name: ${data.name} & Total_Expenses: ${data.Total_Expense} ₹ </li>`;
+      let childElem = `<li mt-4 class="border border-warning border-2 rounded bg-primary">Name: ${data.name} & Total_Expenses: ${data.totalExpenses} ₹ </li>`;
       parentElem.innerHTML += childElem;
     }
 
