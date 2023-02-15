@@ -96,6 +96,7 @@
               
             })
             .catch(err=>{
+              console.log(err);
               document.body.innerHTML+=`<div class="text-white text-center bg-danger">Error: ${err.response.data.message}</div>`
               // document.body.innerHTML+=`<h5 class="text-warning">Error:->>   ${err.response.data.message}</h5>`
             })

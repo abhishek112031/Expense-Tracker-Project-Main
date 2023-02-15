@@ -30,9 +30,6 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
-          <li id="exp-premium" class="nav-item">
-            
-          </li>
         </ul>
         <a class="text-decoration-none btn btn-outline-dark text-white me-4" href="/user/sign-up">Sign Up</a>
         <a class="text-decoration-none btn btn-outline-dark text-white me-2" href="/user/login">Log In</a>
@@ -73,13 +70,15 @@
 
       </form>
     </div>
-    <div class="col-sm-4">
-      <button id="show-board" class="btn btn-outline-dark mb-4">Show Leader-Board:</button>
+
+
+    <div id="leaderBoard" class="col-sm-4">
+      <!-- <button id="show-board" class="btn btn-outline-dark mb-4">Show Leader-Board:</button> -->
       <ul id="lboard"></ul>
     </div>
   </div>
 
-  <!-- show leader-board -->
+  
 
 
 
@@ -125,11 +124,11 @@
     function PremiumUserTitle(premiumUser) {
       document.getElementById('premium').innerHTML = `<h5 class="text-center text-success border border-dark border-opacity-25 border-3 rounded-pill bg-warning">Hi ${premiumUser.data.name}, ${premiumUser.data.message}</h5>`
       document.getElementById('rzp-button').style.visibility="hidden";
-      const parent=document.getElementById('exp-premium');
-      const child=`<a class="btn btn-outline-warning" href="/user/premium/expense-timeframe">Expenditure Time Frame</a>`;
-      parent.innerHTML=child;
-     
-      
+
+      // const parent_node=document.getElementById('leaderBoard');
+      // const child=`<button id="show-board" class="btn btn-outline-dark mb-4">Show Leader-Board:</button>
+      // <ul id="lboard"></ul>`
+      // parent_node.innerHTML+=child;
 
     }
 
@@ -141,10 +140,10 @@
           let premiumUser = await axios.get('http://localhost:3000/premium-user', { headers: { "Authorization": token } });
           console.log(premiumUser);
           if (premiumUser.status===200){
-            
             PremiumUserTitle(premiumUser);
+            showLeaderBoard();
           }
-      
+         
           let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
 
           for (let i = 0; i < getResponse.data.length; i++) {
@@ -279,29 +278,40 @@
     }
 
     //for leader-board:-->
-    document.getElementById('show-board').onclick = async function () {
-      try {
-        const token = localStorage.getItem('token');
-        let resp = await axios.get('http://localhost:3000/premium/leader-board', { headers: { "Authorization": token } })
-        console.log(resp.data);
-        resp.data.forEach(data => {
-          console.log(data);
-          showLeaderBoardOnScreen(data);
-        })
+    function showLeaderBoard(){
+      const inputElem=document.createElement("input");
+      inputElem.type="button";
+      inputElem.value='Show Leader Board:';
+      document.getElementById("leaderBoard").appendChild(inputElem);
 
-      }
-      catch (err) {
+      // console.log("hiiii")
 
+
+      inputElem.onclick = async function () {
+        try {
+          const token = localStorage.getItem('token');
+          let resp = await axios.get('http://localhost:3000/premium/leader-board', { headers: { "Authorization": token }})
+          console.log("leader board----->>>",resp.data);
+          resp.data.forEach(data => {
+            console.log(data);
+            showLeaderBoardOnScreen(data);
+          })
+  
+        }
+        catch (err) {
+  
+        }
       }
+      
+
     }
 
     function showLeaderBoardOnScreen(data) {
-      const parentElem = document.getElementById('lboard');
-      childElem = `<li mt-4 class="border border-warning border-2 rounded bg-primary">Name: ${data.Name} & Total_Expenses: ${data.Total_Expense} ₹ </li>`;
+      let parentElem = document.getElementById('lboard');
+      let childElem = `<li mt-4 class="border border-warning border-2 rounded bg-primary">Name: ${data.name} & Total_Expenses: ${data.Total_Expense} ₹ </li>`;
       parentElem.innerHTML += childElem;
     }
-  //expTimeframe:--->
-  // document.getElementById("expTf").disabled = true;
+
 
 
 

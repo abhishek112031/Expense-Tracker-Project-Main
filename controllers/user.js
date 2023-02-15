@@ -32,6 +32,14 @@ exports.postNewUserDetails = (req, res, next) => {
         return res.status(400).json({ message: 'input can not be empty or undefined' });
     }
 
+    // User.findAll({where:{emailId:email}})
+    // .then(user=>{
+    //     if(user[0].emailId===email){
+    //         return res.status(500).json({
+    //             message:"email id already exist"
+    //         })
+    //     }
+    // });
     bcrypt.hash(password, 10, (err, hash) => {
 
         User.create({
@@ -44,7 +52,7 @@ exports.postNewUserDetails = (req, res, next) => {
                 res.status(201).json({ message: 'user is created successfully', success: true })
             })
             .catch(err => {
-                res.status(500).json({ message: err, success: false });
+                res.status(500).json({ message: "email id already exist", success: false });
 
             })
     })

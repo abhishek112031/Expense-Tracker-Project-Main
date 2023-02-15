@@ -1,1 +1,0 @@
-http://localhost:3000/password/resetpassword/ea4647b5-373f-4c3c-b76e-21f4cffbda9f
