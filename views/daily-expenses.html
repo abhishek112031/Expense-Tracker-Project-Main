@@ -14,6 +14,9 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
     }
+    .List{
+      background-color: #f09d9d;
+    }
   </style>
 </head>
 
@@ -38,7 +41,7 @@
     </div>
   </nav>
 
-  <div id="premium" class="container">
+  <div id="premium" class="container-fluid">
 
   </div>
 
@@ -72,9 +75,9 @@
     </div>
 
 
-    <div id="leaderBoard" class="col-sm-4">
-      <!-- <button id="show-board" class="btn btn-outline-dark mb-4">Show Leader-Board:</button> -->
-      <ul id="lboard"></ul>
+    <div id="leaderBoard1" class="col-sm-4">
+      <div id="leaderBoard"></div>
+      <ol id="lboard"></ol>
     </div>
   </div>
 
@@ -83,10 +86,17 @@
 
 
   <!-- list of all expenses -->
-  <div id="main" class="container-lg justify-content-center mt-4">
+  <!-- <div id="main" class="container-lg justify-content-center mt-4">
     <h3 class="display-6 text-dark text-center  fst-italic">All Expense(s):</h3>
     <div class="row justify-content-center" id="exp"></div>
-  </div>
+  </div> -->
+
+  <h3 class="text-dark ms-5 fst-italic">All Expense(s):</h3>
+  <ol id="exp" class="text-center"></ol>
+   
+
+
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -122,7 +132,7 @@
 
     }
     function PremiumUserTitle(premiumUser) {
-      document.getElementById('premium').innerHTML = `<h5 class="text-center text-success border border-dark border-opacity-25 border-3 rounded-pill bg-warning">Hi ${premiumUser.data.name}, ${premiumUser.data.message}</h5>`
+      document.getElementById('premium').innerHTML = `<h5 class="text-center text-success  bg-warning">Hi ${premiumUser.data.name}, ${premiumUser.data.message}</h5>`
       document.getElementById('rzp-button').style.visibility="hidden";
 
       // const parent_node=document.getElementById('leaderBoard');
@@ -177,12 +187,15 @@
 
 
       const parent_node = document.getElementById("exp");
-      const child_node = `<div id=${expense.id} class="justify-content-center mt-3 ms-2 rounded border border-secondary col-md-3"><div class="col align-item-center ">
-        <h3 class="text-dark text-center">${expense.description}</h3>
-        <h4 class="text-primary fst-italic text-center">Amount: <span class="text-danger ">${expense.expenseAmount}</span> ₹</h4>
-        <h5 class="text-dark text-center fst-italic">Category:  ${expense.category}</h5>
-        <div class="row"><button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger">Delete</button></div>
-        </div></div>`;
+      // const child_node = `<div id=${expense.id} class="justify-content-center mt-3 ms-2 rounded border border-secondary col-md-3"><div class="col align-item-center ">
+      //   <h3 class="text-dark text-center">${expense.description}</h3>
+      //   <h4 class="text-primary fst-italic text-center">Amount: <span class="text-danger ">${expense.expenseAmount}</span> ₹</h4>
+      //   <h5 class="text-dark text-center fst-italic">Category:  ${expense.category}</h5>
+      //   <div class="row"><button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger">Delete</button></div>
+      //   </div></div>`;
+
+      const child_node = `<li id=${expense.id} class=" List text-center mt-3 ms-2 rounded border border-secondary col-md-6 fw-bold">
+        ${expense.description} --- ${expense.expenseAmount} ₹ --- ${expense.category}<button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger ms-5">Delete</button></li>`;
 
       parent_node.innerHTML = parent_node.innerHTML + child_node;
 
@@ -212,6 +225,7 @@
       const child = document.getElementById(expId);
       if (child) {
         parent.removeChild(child);
+        
 
       }
     }
@@ -242,7 +256,7 @@
             alert('you are a premium user now!');
             showLeaderBoard()
 
-            document.getElementById('premium').innerHTML = `<h5 class="text-center text-success border border-dark border-opacity-25 border-3 rounded-pill bg-warning">You are A Premium User</h5>`
+            document.getElementById('premium').innerHTML = `<h5 class="text-center text-success bg-warning">You are A Premium User</h5>`
             document.getElementById('rzp-button').style.visibility="hidden";
 
 
@@ -282,17 +296,15 @@
     function showLeaderBoard(){
       const inputElem=document.createElement("input");
       inputElem.type="button";
+      // inputElem.className="btn"
       inputElem.value='Show Leader Board:';
-      document.getElementById("leaderBoard").appendChild(inputElem);
-
-      // console.log("hiiii")
-
-
+      
       inputElem.onclick = async function () {
         try {
           const token = localStorage.getItem('token');
           let resp = await axios.get('http://localhost:3000/premium/leader-board', { headers: { "Authorization": token }})
           console.log("leader board----->>>",resp.data);
+
           resp.data.forEach(data => {
             console.log(data);
             showLeaderBoardOnScreen(data);
@@ -303,13 +315,15 @@
   
         }
       }
+
+      document.getElementById("leaderBoard").appendChild(inputElem);
       
 
     }
 
     function showLeaderBoardOnScreen(data) {
       let parentElem = document.getElementById('lboard');
-      let childElem = `<li mt-4 class="border border-warning border-2 rounded bg-primary">Name: ${data.name} & Total_Expenses: ${data.totalExpenses} ₹ </li>`;
+      let childElem = `<li class=" text-center text-primary bg-warning fw-bold mt-2 border border-warning border-2 rounded ">Name: ${data.name} & Total_Expenses: ${data.totalExpenses} ₹ </li>`;
       parentElem.innerHTML += childElem;
     }
 

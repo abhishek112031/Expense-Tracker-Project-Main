@@ -45,15 +45,15 @@ exports.postEmailidToReceivePwLink = (req, res, next) => {
                 }
                 mailTransporter.sendMail(details, (err) => {
                     if (err) {
-                        return res.status(404).json({ message: 'something went wrong!!' })
+                        return res.status(404).json({ message: 'Something went wrong!!' })
                     }
                     else {
-                        res.status(201).json({ message: 'reset password link sent to your emailId' })
+                        res.status(201).json({ message: 'Reset password link sent to your emailId' })
                     }
                 });
             }
             else {
-                res.status(404).json({ message: 'user doesnot exist' })
+                res.status(404).json({ message: 'User doesnot exist' })
 
             }
 
