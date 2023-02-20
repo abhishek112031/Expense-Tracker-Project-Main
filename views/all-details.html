@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Expense Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+      #exp{
+        flex-direction: column;
+
+      }
+      .List{
+        
+        background-color: gray;
+      }
+    </style>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-secondary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Day to Day Expenses</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <!-- <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li> -->
+          <!-- <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li> -->
+          <!-- <li class="nav-item">
+              <a class="nav-link disabled">Disabled</a>
+            </li> -->
+        </ul>
+        <!-- <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form> -->
+        <a class="text-decoration-none btn btn-outline-dark text-white me-4" href="/user/sign-up">Sign Up</a>
+        <a class="text-decoration-none btn btn-outline-dark text-white me-2" href="/user/login">Log In</a>
+      </div>
+    </div>
+  </nav>
+  <h1 class="text-center mt-2">Day to Day Expenses :</h1>
+
+
+<div class="container  justify-content-center ">
+  <ol id="exp" class="d-flex justify-content-center align-items-center">
+
+  </ol>
+</div>
+
+<div class="container d-flex justify-content-end">
+  <div>
+    <a id="download" class="btn"><img height="50" width="50" src="https://cdn.pixabay.com/photo/2016/12/18/13/44/download-1915749__480.png"></a>
+  </div>
+
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+  <script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+      let token = localStorage.getItem('token');
+      async function get() {
+        try {
+          let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
+          for (let i = 0; i < getResponse.data.length; i++) {
+
+            showExpensesOnScreen(getResponse.data[i]);
+
+          }
+
+
+        }
+        catch (err) {
+          document.body.innerHTML += `<h5 class="text-center">1st ON REFRESH:something went wrong::ref${err}</h5>`
+
+
+        }
+
+      }
+      get()
+    })
+    function showExpensesOnScreen(expense) {
+      const parent_node = document.getElementById("exp");
+      const child_node = `<li id=${expense.id} class=" List text-center mt-3 ms-2 rounded border border-secondary col-md-6 fw-bold">
+  ${expense.description} for ${expense.expenseAmount} ₹ in ${expense.category}</li>`;
+
+      parent_node.innerHTML = parent_node.innerHTML + child_node;
+
+    }
+
+    //download button functionalities:
+    document.getElementById('download').onclick= async function(){
+      // document.body.innerHTML += `<h5 class="text-center">this functionality is not available right now!</h5>`
+
+      try{
+
+        const token=localStorage.getItem('token');
+        const resp=await axios.get('http://localhost:3000/expenses/download',{ headers: { "Authorization": token } });
+        if(resp.status===200){
+          var a=document.createElement('a');
+          a.href=resp.data.fileUrl;
+          a.download='myexpense.csv';
+          a.click()
+
+        }
+        
+        
+        
+      }
+      catch(err){
+        document.body.innerHTML += `<h5 class="text-center text-danger">${err.response.data.message}</h5>`
+        console.log("bucket s3 error====>>",err)
+
+      }
+
+    }
+
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

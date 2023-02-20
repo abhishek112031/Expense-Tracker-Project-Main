@@ -14,7 +14,8 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
     }
-    .List{
+
+    .List {
       background-color: #f09d9d;
     }
   </style>
@@ -33,6 +34,9 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
+          <li id="details" class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:3000/details">All Details</a>  
+          </li>
         </ul>
         <a class="text-decoration-none btn btn-outline-dark text-white me-4" href="/user/sign-up">Sign Up</a>
         <a class="text-decoration-none btn btn-outline-dark text-white me-2" href="/user/login">Log In</a>
@@ -41,11 +45,13 @@
     </div>
   </nav>
 
-  <div id="premium" class="container-fluid">
 
-  </div>
 
-  <h1 class="display-5 text-center text-primary">Day-to-Day-Expenses:</h1>
+    <div id="premium" class="container-fluid"></div>
+    <!-- <button id="details" class="col-md-1 btn btn-outline-dark" >Details</button> -->
+ 
+
+  <h1 class="display-5 text-center text-primary">Add Expenses:</h1>
 
   <div class="row mt-4 justify-content-center">
     <div class="col-sm-4 ">
@@ -81,19 +87,10 @@
     </div>
   </div>
 
-  
-
-
-
-  <!-- list of all expenses -->
-  <!-- <div id="main" class="container-lg justify-content-center mt-4">
-    <h3 class="display-6 text-dark text-center  fst-italic">All Expense(s):</h3>
-    <div class="row justify-content-center" id="exp"></div>
-  </div> -->
 
   <h3 class="text-dark ms-5 fst-italic">All Expense(s):</h3>
   <ol id="exp" class="text-center"></ol>
-   
+
 
 
 
@@ -108,9 +105,7 @@
 
     function saveToDatabase(event) {
       event.preventDefault();
-      // const expenseAmount = event.target.expenseAmount.value;
-      // const description = event.target.description.value;
-      // const category = event.target.category.value;
+
       const token = localStorage.getItem('token');
       const expenses = {
         expenseAmount: event.target.expenseAmount.value,
@@ -133,12 +128,10 @@
     }
     function PremiumUserTitle(premiumUser) {
       document.getElementById('premium').innerHTML = `<h5 class="text-center text-success  bg-warning">Hi ${premiumUser.data.name}, ${premiumUser.data.message}</h5>`
-      document.getElementById('rzp-button').style.visibility="hidden";
+      document.getElementById('rzp-button').style.visibility = "hidden";
 
-      // const parent_node=document.getElementById('leaderBoard');
-      // const child=`<button id="show-board" class="btn btn-outline-dark mb-4">Show Leader-Board:</button>
-      // <ul id="lboard"></ul>`
-      // parent_node.innerHTML+=child;
+
+    
 
     }
 
@@ -147,21 +140,22 @@
       let token = localStorage.getItem('token');
       async function get() {
         try {
-          let premiumUser = await axios.get('http://localhost:3000/premium-user', { headers: { "Authorization": token } });
-          console.log(premiumUser);
-          if (premiumUser.status===200){
-            PremiumUserTitle(premiumUser);
-            showLeaderBoard();
-          }
-         
           let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
-
           for (let i = 0; i < getResponse.data.length; i++) {
 
             showExpensesOnScreen(getResponse.data[i]);
 
           }
-
+          let premiumUser = await axios.get('http://localhost:3000/premium-user', { headers: { "Authorization": token } });
+          console.log(premiumUser);
+          if (premiumUser.status === 200) {
+            PremiumUserTitle(premiumUser);
+            showLeaderBoard();
+            
+          }
+          else{
+            document.getElementById('details').style.visibility="hidden"
+          }
 
         }
         catch (err) {
@@ -175,8 +169,6 @@
 
 
     });
-
-
     function showExpensesOnScreen(expense) {
 
 
@@ -187,15 +179,8 @@
 
 
       const parent_node = document.getElementById("exp");
-      // const child_node = `<div id=${expense.id} class="justify-content-center mt-3 ms-2 rounded border border-secondary col-md-3"><div class="col align-item-center ">
-      //   <h3 class="text-dark text-center">${expense.description}</h3>
-      //   <h4 class="text-primary fst-italic text-center">Amount: <span class="text-danger ">${expense.expenseAmount}</span> ₹</h4>
-      //   <h5 class="text-dark text-center fst-italic">Category:  ${expense.category}</h5>
-      //   <div class="row"><button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger">Delete</button></div>
-      //   </div></div>`;
-
       const child_node = `<li id=${expense.id} class=" List text-center mt-3 ms-2 rounded border border-secondary col-md-6 fw-bold">
-        ${expense.description} --- ${expense.expenseAmount} ₹ --- ${expense.category}<button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger ms-5">Delete</button></li>`;
+        ${expense.description} for ${expense.expenseAmount} ₹ in ${expense.category}<button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger ms-5">Delete</button></li>`;
 
       parent_node.innerHTML = parent_node.innerHTML + child_node;
 
@@ -225,7 +210,7 @@
       const child = document.getElementById(expId);
       if (child) {
         parent.removeChild(child);
-        
+
 
       }
     }
@@ -255,9 +240,10 @@
 
             alert('you are a premium user now!');
             showLeaderBoard()
+            
 
             document.getElementById('premium').innerHTML = `<h5 class="text-center text-success bg-warning">You are A Premium User</h5>`
-            document.getElementById('rzp-button').style.visibility="hidden";
+            document.getElementById('rzp-button').style.visibility = "hidden";
 
 
           }
@@ -293,31 +279,31 @@
     }
 
     //for leader-board:-->
-    function showLeaderBoard(){
-      const inputElem=document.createElement("input");
-      inputElem.type="button";
+    function showLeaderBoard() {
+      const inputElem = document.createElement("input");
+      inputElem.type = "button";
       // inputElem.className="btn"
-      inputElem.value='Show Leader Board:';
-      
+      inputElem.value = 'Show Leader Board:';
+
       inputElem.onclick = async function () {
         try {
           const token = localStorage.getItem('token');
-          let resp = await axios.get('http://localhost:3000/premium/leader-board', { headers: { "Authorization": token }})
-          console.log("leader board----->>>",resp.data);
+          let resp = await axios.get('http://localhost:3000/premium/leader-board', { headers: { "Authorization": token } })
+          console.log("leader board----->>>", resp.data);
 
           resp.data.forEach(data => {
             console.log(data);
             showLeaderBoardOnScreen(data);
           })
-  
+
         }
         catch (err) {
-  
+
         }
       }
 
       document.getElementById("leaderBoard").appendChild(inputElem);
-      
+
 
     }
 

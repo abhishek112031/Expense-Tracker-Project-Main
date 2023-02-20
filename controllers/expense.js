@@ -3,6 +3,46 @@ const rootDir=require('../util/path');
 const Expense=require('../models/expenses');
 const User=require('../models/user');
 const sequelize = require('../util/database');
+const UserServices=require('../services/userservices');
+const S3Services=require('../services/S3services');
+
+
+const dotenv=require('dotenv');
+dotenv.config();
+
+
+  
+exports.downloadExpense=async (req,res,next)=>{
+  
+    try{
+  
+      // console.log("fileurl===>>",fileUrl)
+      
+      if(req.user.isPremiumUser){
+        const expenses=await UserServices.getExpenses(req);
+        // console.log(expenses);
+      
+        const stringifiedExpenses=JSON.stringify(expenses);
+      
+        //file name should be depend upon user id,who is going to dwnld:
+        let userId=req.user.id;
+        const fileName=`expense${userId}/${new Date()}.txt`;
+        const fileUrl= await S3Services.uploadToS3(stringifiedExpenses,fileName);//async function
+      
+  
+        return res.status(200).json({fileUrl,success:true});
+  
+      }
+      
+      return res.status(500).json({message:"Please Update to Premium to Fascilate this functionality!",success:false});
+    
+    
+    }
+    catch(err){
+      console.log("s3 error--->>",err)
+      res.status(500).json({err,success:false});
+    }
+  }
 
 
 
@@ -152,3 +192,6 @@ exports.deleteExpenseById= async(req,res,next)=>{
     }
  
 }
+exports.getDetailsPage=(req,res)=>{
+    res.sendFile(path.join(rootDir,'views','all-details.html'));
+  }

@@ -52,3 +52,4 @@ sequelize
     .then(() => {
         app.listen(3000);
     });
+    

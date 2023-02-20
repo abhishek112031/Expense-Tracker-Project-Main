@@ -5,9 +5,12 @@ const expenseController=require('../controllers/expense');
 const userAuth=require('../middleware/auth');
 const router=express.Router();
 
+router.get('/expenses/download',userAuth,expenseController.downloadExpense);
+
 router.get('/user/daily-expenses',expenseController.getExpensePage);
 router.post('/user/add-daily-expenses',userAuth,expenseController.postAddExpense );
 router.get('/user/all-expenses',userAuth,expenseController.getEachUserExpenses);
+router.get('/details',expenseController.getDetailsPage);
 router.delete('/user/expenses/delete/:Id',userAuth,expenseController.deleteExpenseById);
 
 

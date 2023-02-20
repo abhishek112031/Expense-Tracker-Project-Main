@@ -48,12 +48,12 @@ exports.postEmailidToReceivePwLink = (req, res, next) => {
                         return res.status(404).json({ message: 'Something went wrong!!' })
                     }
                     else {
-                        res.status(201).json({ message: 'Reset password link sent to your emailId' })
+                        res.status(201).json({ message: 'Reset password link sent to your email Id' })
                     }
                 });
             }
             else {
-                res.status(404).json({ message: 'User doesnot exist' })
+                res.status(404).json({ message: 'User does not exist!' })
 
             }
 
@@ -61,7 +61,7 @@ exports.postEmailidToReceivePwLink = (req, res, next) => {
         })
         .catch(err => {
 
-            res.status(404).json({ message: 'user doesnot exist' })
+            res.status(404).json({ message: 'user does not exist' })
         })
 
 }
