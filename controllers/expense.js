@@ -2,6 +2,7 @@ const path=require('path');
 const rootDir=require('../util/path');
 const Expense=require('../models/expenses');
 const User=require('../models/user');
+const DownloadedFile=require('../models/downloadedFile')
 const sequelize = require('../util/database');
 const UserServices=require('../services/userservices');
 const S3Services=require('../services/S3services');
@@ -28,6 +29,13 @@ exports.downloadExpense=async (req,res,next)=>{
         let userId=req.user.id;
         const fileName=`expense${userId}/${new Date()}.txt`;
         const fileUrl= await S3Services.uploadToS3(stringifiedExpenses,fileName);//async function
+
+        DownloadedFile.create({
+
+            url:fileUrl,
+            userId:req.user.id
+
+        })
       
   
         return res.status(200).json({fileUrl,success:true});

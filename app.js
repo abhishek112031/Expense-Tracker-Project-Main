@@ -5,11 +5,13 @@ const cors = require('cors');
 const Sequelize = require('sequelize');
 const rootDir = require('./util/path');
 const sequelize = require('./util/database');
+
 //models:-->
 const User=require('./models/user');
 const Expense=require('./models/expenses');
 const Order=require('./models/orders');
 const Forgotpassword = require('./models/forgotPassword');
+const DownloadedFile=require('./models/downloadedFile');
 
 
 //routers:->
@@ -44,6 +46,11 @@ Order.belongsTo(User);
 User.hasMany(Forgotpassword);
 Forgotpassword.belongsTo(User);
 
+//trial part:
+User.hasMany(DownloadedFile);
+DownloadedFile.belongsTo(User)
+
+
 
 //db table sync/creation:-->
 sequelize
@@ -51,5 +58,8 @@ sequelize
     .sync()
     .then(() => {
         app.listen(3000);
-    });
+    })
+    .catch(err=>{
+        console.log(err)
+    })
     
