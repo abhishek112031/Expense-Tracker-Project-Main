@@ -20,6 +20,7 @@ const expenseRoute=require('./routers/expense');
 const purchaseRoute=require('./routers/purchase');
 const premiumFeatureRoute=require('./routers/premiumFeatures');
 const resetPasswordRoute=require('./routers/resetPassword');
+const downloadFilesRoute=require('./routers/allDownloads')
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(purchaseRoute);
 app.use(premiumFeatureRoute);
 app.use(expenseRoute);
 app.use(resetPasswordRoute);
+app.use(downloadFilesRoute);
 
 
 //associations:-->>One to many

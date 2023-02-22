@@ -8,6 +8,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
     body {
       background-image: url("https://cdn.pixabay.com/photo/2015/04/28/12/29/white-743495__340.jpg");
       background-size: cover;
@@ -17,6 +24,83 @@
 
     .List {
       background-color: #f09d9d;
+    }
+
+
+    body {
+      background: #F3F3F3;
+    }
+
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60px;
+      background-color: #EEE;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    main .list {
+      width: 100%;
+      max-width: 768px;
+      background-color: #FFF;
+      border: 1px solid #CCC;
+      margin-top: 25px;
+    }
+
+    main .list .item {
+      padding: 15px;
+      border-bottom: 1px solid #CCC;
+    }
+
+    main .list .item:last-of-type {
+      border-bottom: none;
+    }
+
+    main .list .item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .pagenumbers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .pagenumbers button {
+      width: 50px;
+      height: 50px;
+
+      appearance: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+
+      background-color: #44AAEE;
+
+      margin: 5px;
+      transition: 0.4s;
+
+      color: #FFF;
+      font-size: 18px;
+      text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .pagenumbers button:hover {
+      background-color: #44EEAA;
+    }
+
+    .pagenumbers button.active {
+      background-color: #44EEAA;
+      box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
@@ -35,7 +119,7 @@
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
           <li id="details" class="nav-item">
-            <a class="nav-link active" aria-current="page" href="http://localhost:3000/details">All Details</a>  
+            <a class="nav-link active" aria-current="page" href="http://localhost:3000/details">All Details</a>
           </li>
         </ul>
         <a class="text-decoration-none btn btn-outline-dark text-white me-4" href="/user/sign-up">Sign Up</a>
@@ -47,9 +131,9 @@
 
 
 
-    <div id="premium" class="container-fluid"></div>
-    <!-- <button id="details" class="col-md-1 btn btn-outline-dark" >Details</button> -->
- 
+  <div id="premium" class="container-fluid"></div>
+  <!-- <button id="details" class="col-md-1 btn btn-outline-dark" >Details</button> -->
+
 
   <h1 class="display-5 text-center text-primary">Add Expenses:</h1>
 
@@ -88,11 +172,18 @@
   </div>
 
 
-  <h3 class="text-dark ms-5 fst-italic">All Expense(s):</h3>
-  <ol id="exp" class="text-center"></ol>
+  <!-- <h3 class="text-dark ms-5 fst-italic">All Expense(s):</h3>
+  <ol id="exp" class="text-center"></ol> -->
 
 
+  <header>
+    <h1 class="text-center">List of Expenses:</h1>
+  </header>
 
+  <main>
+    <ol class="list text-center" id="list"></ol>
+    <div class="pagenumbers" id="pagination"></div>
+  </main>
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
@@ -131,7 +222,7 @@
       document.getElementById('rzp-button').style.visibility = "hidden";
 
 
-    
+
 
     }
 
@@ -141,20 +232,18 @@
       async function get() {
         try {
           let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
-          for (let i = 0; i < getResponse.data.length; i++) {
+          DisplayList(getResponse.data, list_element, rows, current_page);
+          SetupPagination(getResponse.data, pagination_element, rows);
 
-            showExpensesOnScreen(getResponse.data[i]);
-
-          }
           let premiumUser = await axios.get('http://localhost:3000/premium-user', { headers: { "Authorization": token } });
           console.log(premiumUser);
           if (premiumUser.status === 200) {
             PremiumUserTitle(premiumUser);
             showLeaderBoard();
-            
+
           }
-          else{
-            document.getElementById('details').style.visibility="hidden"
+          else {
+            document.getElementById('details').style.visibility = "hidden"
           }
 
         }
@@ -169,7 +258,7 @@
 
 
     });
-    function showExpensesOnScreen(expense) {
+    function showExpensesOnScreen(item) {
 
 
       document.getElementById("expenseAmount").value = "";
@@ -178,11 +267,11 @@
 
 
 
-      const parent_node = document.getElementById("exp");
-      const child_node = `<li id=${expense.id} class=" List text-center mt-3 ms-2 rounded border border-secondary col-md-6 fw-bold">
-        ${expense.description} for ${expense.expenseAmount} ₹ in ${expense.category}<button onclick=deleteExpense('${expense.id}') class=" btn btn-outline-danger ms-5">Delete</button></li>`;
+      let child = `<li id=${item.id} class="mt-2 border border-warning rounded bg-light">${item.expenseAmount}---${item.description}--${item.category}<button class="btn btn-outline-danger ms-5" onclick=deleteExpense('${item.id}')>Delete</button></li>`
+      // item_element.innerText=item;
 
-      parent_node.innerHTML = parent_node.innerHTML + child_node;
+
+      document.getElementById('list').innerHTML += child;
 
     }
     function deleteExpense(expId) {
@@ -206,7 +295,7 @@
 
     }
     function removeFromScreen(expId) {
-      const parent = document.getElementById("exp");
+      const parent = document.getElementById("list");
       const child = document.getElementById(expId);
       if (child) {
         parent.removeChild(child);
@@ -240,7 +329,7 @@
 
             alert('you are a premium user now!');
             showLeaderBoard()
-            
+
 
             document.getElementById('premium').innerHTML = `<h5 class="text-center text-success bg-warning">You are A Premium User</h5>`
             document.getElementById('rzp-button').style.visibility = "hidden";
@@ -313,7 +402,67 @@
       parentElem.innerHTML += childElem;
     }
 
+    //pagination:
+    const list_element = document.getElementById('list');
+    const pagination_element = document.getElementById('pagination');
 
+    let current_page = 1;
+    let rows = parseInt(prompt("enter row per page"))
+
+    function DisplayList(items, wrapper, rows_per_page, page) {
+      wrapper.innerHTML = "";
+      page--;
+
+      let start = rows_per_page * page;//starting index
+      let end = start + rows_per_page;//ending index+1
+      let paginatedItems = items.slice(start, end);//list 0f items per page
+
+      for (let i = 0; i < paginatedItems.length; i++) {
+        let item = paginatedItems[i];//each item
+        showExpensesOnScreen(item)
+
+
+
+        //<div class="item">item</div>//item=each item
+        // let child =`<li id=${item.id}>${item.amount}---${item.description}---${item.category}</li>`
+        // item_element.innerText=item;
+
+
+        // wrapper.appendChild(child);
+        // wrapper.innerHTML+=child;
+      }
+    }
+
+    function SetupPagination(items, wrapper, rows_per_page) {
+      wrapper.innerHTML = "";
+
+      let page_count = Math.ceil(items.length / rows_per_page);//no of page/buttons
+      for (let i = 1; i < page_count + 1; i++) {
+        let btn = PaginationButton(i, items);
+        wrapper.appendChild(btn);
+      }
+    }
+
+    function PaginationButton(page, items) {
+      let button = document.createElement('button');
+      button.innerText = page;//ex-1,2,3,4...
+
+      if (current_page == page) button.classList.add('active');
+
+      button.addEventListener('click', async function () {
+        const token = localStorage.getItem('token');
+        const resp = await axios.get('http://localhost:3000/user/all-expenses', { headers: { "Authorization": token } })
+        current_page = page;
+        DisplayList(resp.data, list_element, rows, current_page);
+
+        let current_btn = document.querySelector('.pagenumbers button.active');
+        current_btn.classList.remove('active');
+
+        button.classList.add('active');
+      });
+
+      return button;
+    }
 
 
 
