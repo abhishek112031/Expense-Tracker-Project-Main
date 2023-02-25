@@ -10,7 +10,7 @@ const authenticate=async(req,res,next)=>{
         const token=req.header('Authorization');
         console.log(token);
         const user=jwt.verify(token,process.env.SECRET_TOKEN_KEY);//decript the token
-        console.log("USERID>>>>>>>>",user.userId);
+        // console.log("USERID>>>>>>>>",user.userId);
 
         User.findByPk(user.userId).then(user=>{
             req.user=user;
@@ -19,7 +19,7 @@ const authenticate=async(req,res,next)=>{
 
     }
     catch(err){
-        console.log(err);
+        // console.log(err);
         return res.status(401).json({success:false});
 
     }

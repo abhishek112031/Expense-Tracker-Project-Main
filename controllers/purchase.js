@@ -26,7 +26,7 @@ exports.purchasePremium = async (req, res) => {
         });
     }
     catch (err) {
-        console.log("err----->>>>",err);
+        // console.log("err----->>>>",err);
         res.status(403).json({ message: 'something went wrong', Error: err })
     }
 

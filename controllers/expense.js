@@ -11,8 +11,14 @@ const S3Services=require('../services/S3services');
 const dotenv=require('dotenv');
 dotenv.config();
 
-
-  
+function invalidInput(input) {
+    if (input === undefined || input.length === 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 exports.downloadExpense=async (req,res,next)=>{
   
     try{
@@ -47,12 +53,10 @@ exports.downloadExpense=async (req,res,next)=>{
     
     }
     catch(err){
-      console.log("s3 error--->>",err)
-      res.status(500).json({err,success:false});
+    //   console.log("s3 error--->>",err)
+      res.status(500).json({message:"something went wrong! ",success:false});
     }
-  }
-
-
+}
 
 exports.getExpensePage=(req, res, next) => {
     res.sendFile(path.join(rootDir, 'views', 'daily-expenses.html'));
@@ -107,6 +111,9 @@ exports.postAddExpense=async(req, res, next) => {
 
         const t=await sequelize.transaction()
         const {expenseAmount,description,category}=req.body;
+        if (invalidInput(expenseAmount) || invalidInput(description) ||invalidInput(category)) {
+            return res.status(400).json({ message: 'input can not be empty or undefined' })
+        }
         const eachExp= await Expense.create({
             expenseAmount: expenseAmount,
             description: description,
@@ -202,4 +209,4 @@ exports.deleteExpenseById= async(req,res,next)=>{
 }
 exports.getDetailsPage=(req,res)=>{
     res.sendFile(path.join(rootDir,'views','all-details.html'));
-  }
+}

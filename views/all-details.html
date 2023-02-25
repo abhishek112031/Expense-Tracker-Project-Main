@@ -67,6 +67,13 @@
   </nav>
   <h1 class="text-center mt-2">Day to Day Expenses :</h1>
 
+  <div class="container d-flex justify-content-end">
+    <div>
+      <a id="download" class="btn"><img height="50" width="50" src="https://cdn.pixabay.com/photo/2016/12/18/13/44/download-1915749__480.png"></a>
+    </div>
+  
+  </div>  
+
 
 <div class="container  justify-content-center ">
   <ol id="exp" class="d-flex justify-content-center align-items-center">
@@ -74,15 +81,10 @@
   </ol>
 </div>
 
-<div class="container d-flex justify-content-end">
-  <div>
-    <a id="download" class="btn"><img height="50" width="50" src="https://cdn.pixabay.com/photo/2016/12/18/13/44/download-1915749__480.png"></a>
-  </div>
 
-</div>
 
 <div class="container  justify-content-center ">
-  <h3>list Of download files:</h3>
+  <h3>List Of downloaded files:</h3>
   <ol id="dwn" class="d-flex justify-content-center align-items-center">
 
   </ol>
@@ -90,79 +92,7 @@
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
-  <script>
-
-    window.addEventListener('DOMContentLoaded', () => {
-      let token = localStorage.getItem('token');
-      async function get() {
-        try {
-          let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
-          for (let i = 0; i < getResponse.data.length; i++) {
-
-            showExpensesOnScreen(getResponse.data[i]);
-
-          }
-
-          //trial:
-          let allDownloads=await axios.get("http://localhost:3000/downloads/all", { headers: { "Authorization": token } })
-          console.log("hiiii")
-          allDownloads.data.forEach((data)=>{
-            showallDownloads(data.url);
-          })
-
-
-        }
-        catch (err) {
-          document.body.innerHTML += `<h5 class="text-center">1st ON REFRESH:something went wrong::ref${err}</h5>`
-
-
-        }
-
-      }
-      get()
-    })
-    function showExpensesOnScreen(expense) {
-      const parent_node = document.getElementById("exp");
-      const child_node = `<li id=${expense.id} class=" List text-center mt-3 ms-2 rounded border border-secondary col-md-6 fw-bold">
-  ${expense.description} for ${expense.expenseAmount} ₹ in ${expense.category}</li>`;
-
-      parent_node.innerHTML = parent_node.innerHTML + child_node;
-
-    }
-
-    //download button functionalities:
-    document.getElementById('download').onclick= async function(){
-      // document.body.innerHTML += `<h5 class="text-center">this functionality is not available right now!</h5>`
-
-      try{
-
-        const token=localStorage.getItem('token');
-        const resp=await axios.get('http://localhost:3000/expenses/download',{ headers: { "Authorization": token } });
-        if(resp.status===200){
-          var a=document.createElement('a');
-          a.href=resp.data.fileUrl;
-          a.download='myexpense.csv';
-          a.click()
-
-        }
-        
-        
-        
-      }
-      catch(err){
-        document.body.innerHTML += `<h5 class="text-center text-danger">${err.response.data.message}</h5>`
-        console.log("bucket s3 error====>>",err)
-
-      }
-
-    }
-
-    function showallDownloads(data){
-      // document.body.innerHTML+=`<ol><a href="${data}">${data}</a></ol>`
-      document.getElementById('dwn').innerHTML+=`<li><a href="${data}">${data}</a></li>`
-    }
-
-  </script>
+  <script src="/js/alldetails.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"

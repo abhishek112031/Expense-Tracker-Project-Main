@@ -19,8 +19,6 @@ catch(err){
 }
 
 };
-
-
 exports.premiumLeaderBoard=async(req,res)=>{
     try{
       const aggrigated_expenses= await User.findAll({
@@ -32,7 +30,9 @@ exports.premiumLeaderBoard=async(req,res)=>{
 
     }
     catch(err){
-        console.log("err===>",err);
+        // console.log("err===>",err);
+        res.status(500).json({message:"something went wrong!"});
+
     }
 }
 

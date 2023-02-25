@@ -75,42 +75,7 @@
     
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
-    <script>
-      function checkData(event){
-        event.preventDefault();
-        const email=document.getElementById('userEmail').value;
-        const password=document.getElementById('password').value;
-        
-
-        const loginData={
-          email,password
-        }
-
-        axios.post('http://localhost:3000/user/login',loginData)
-        .then((resp)=>{
-          if(resp.status===200){
-            alert(resp.data.message);
-            console.log(resp.data);
-            localStorage.setItem('token',resp.data.token);
-            window.location.href='http://localhost:3000/user/daily-expenses'
-          }
-        })
-        .catch(err=>{
-          console.log(err.response.data.message)
-              document.body.innerHTML+=`<div class="text-white text-center bg-danger">Error: ${err.response.data.message}</div>`
-            })
-
-
-      }
-
-
-      //forgot password:-->
-      document.getElementById('forgetpw').onclick=async function(){
-        window.location.href='http://localhost:3000/password/forgotpassword'
-
-      }
-
-    </script>
+    <script src="/js/login.js"></script>
 
    
     
