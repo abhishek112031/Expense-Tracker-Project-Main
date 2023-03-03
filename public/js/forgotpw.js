@@ -8,7 +8,7 @@ async function getNewPassword(event) {
 
     try {
 
-        const resp = await axios.post('http://localhost:3000/password/forgotpassword', email);
+        const resp = await axios.post('/password/forgotpassword', email);
 
         // console.log(resp.data.message);
         document.getElementById("wait").style.visibility = "hidden"

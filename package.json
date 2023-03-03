@@ -1,6 +1,7 @@
 {
   "name": "expensetracker-aws",
   "version": "1.0.0",
+  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/abhishek112031/ExpenseTracker-Aws#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1318.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.11.0",
@@ -33,6 +35,5 @@
     "razorpay": "^2.8.4",
     "sequelize": "^6.28.0",
     "uuid": "^9.0.0"
-  },
-  "description": ""
+  }
 }

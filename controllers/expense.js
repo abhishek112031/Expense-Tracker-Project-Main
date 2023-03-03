@@ -139,14 +139,46 @@ exports.postAddExpense=async(req, res, next) => {
 
     }
 };
+// exports.getEachUserExpenses=async (req,res,next)=>{
+//     try{
+//         const allExp=await Expense.findAll({where:{userId:req.user.id}}); // or
+//         // const userWiseExp=await req.user.userExpenses();
+//         res.status(200).json(allExp);
+//     }
+//     catch(err){
+//         res.status(500).json({error:err});
+//     }
+// }
+//trial
 exports.getEachUserExpenses=async (req,res,next)=>{
     try{
-        const allExp=await Expense.findAll({where:{userId:req.user.id}}); // or
-        // const userWiseExp=await req.user.userExpenses();
-        res.status(200).json(allExp);
+        if(!req.query.page){
+            req.query = {
+                page : 1,
+                size : 5
+            }
+        }
+        console.log("query-->",req.query);
+        const allExpenses = await req.user.getExpenses({
+            offset : ((parseInt(req.query.page)-1) * parseInt(req.query.size)),
+            limit: parseInt(req.query.size),
+            order: [['createdAt', 'DESC']]
+        });
+        // console.log("---------------->",allExpenses);
+        const isPremium = req.user.isPremiumUser;
+        const totalExpenses = await req.user.getExpenses({
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('id')), 'TOTAL_EXPENSES'],
+            ]
+        });
+
+        const totalNo=totalExpenses[0].dataValues.TOTAL_EXPENSES
+        // console.log("------>>check===>>",allExpenses,totalNo,isPremium)
+        res.status(200).json({allExpenses,totalNo,isPremium});
     }
     catch(err){
-        res.status(500).json({error:err});
+        console.log("error on change size--->",err);
+        res.status(400).json(null);
     }
 }
 // exports.deleteExpenseById=(req,res,next)=>{

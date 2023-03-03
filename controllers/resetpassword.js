@@ -41,7 +41,7 @@ exports.postEmailidToReceivePwLink = async (req, res, next) => {
                 to: email,
                 subject: 'Expense-Tracker :Reset Password link',
                 text: 'click on the link',
-                html: `<a href="http://localhost:3000/resetpassword/${id}">Reset password</a>`
+                html: `<a href="http://localhost:${process.env.PORT}/resetpassword/${id}">Reset password</a>`
             }
             mailTransporter.sendMail(details, (err) => {
                 if (err) {

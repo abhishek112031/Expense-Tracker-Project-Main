@@ -4,15 +4,15 @@
       let token = localStorage.getItem('token');
     
         try {
-          let getResponse = await axios.get("http://localhost:3000/user/all-expenses", { headers: { "Authorization": token } });
-          for (let i = 0; i < getResponse.data.length; i++) {
+          // let getResponse = await axios.get("/user/all-expenses", { headers: { "Authorization": token } });
+          // for (let i = 0; i < getResponse.data.length; i++) {
 
-            showExpensesOnScreen(getResponse.data[i]);
+          //   showExpensesOnScreen(getResponse.data[i]);
 
-          }
+          // }
 
        
-          let allDownloads=await axios.get("http://localhost:3000/downloads/all", { headers: { "Authorization": token } })
+          let allDownloads=await axios.get("/downloads/all", { headers: { "Authorization": token } })
          
           allDownloads.data.forEach((data)=>{
             showallDownloads(data.url);
@@ -44,7 +44,7 @@
       try{
 
         const token=localStorage.getItem('token');
-        const resp=await axios.get('http://localhost:3000/expenses/download',{ headers: { "Authorization": token } });
+        const resp=await axios.get('/expenses/download',{ headers: { "Authorization": token } });
         if(resp.status===200){
           var a=document.createElement('a');
           a.href=resp.data.fileUrl;

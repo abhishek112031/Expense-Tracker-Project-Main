@@ -12,13 +12,13 @@ async function checkData(event){
       email,password
     }
   
-    const resp=await axios.post('http://localhost:3000/user/login',loginData)
+    const resp=await axios.post('/user/login',loginData)
     
       if(resp.status===200){
         alert(resp.data.message);
         console.log(resp.data);
         localStorage.setItem('token',resp.data.token);
-        window.location.href='http://localhost:3000/user/daily-expenses'
+        window.location.href='/user/daily-expenses'
       }
   }
   
@@ -33,7 +33,7 @@ async function checkData(event){
 
 //forgot password:-->
 document.getElementById('forgetpw').onclick=async function(){
-  window.location.href='http://localhost:3000/password/forgotpassword'
+  window.location.href='/password/forgotpassword'
 
 }
 

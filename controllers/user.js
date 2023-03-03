@@ -18,8 +18,6 @@ function generateAccessToken(id, name) {
     return jwt.sign({ userId: id, name: name }, process.env.SECRET_TOKEN_KEY)
 }
 
-
-
 exports.getSignUpPage = (req, res, next) => {
     res.sendFile(path.join(rootDir, 'views', 'signUp.html'));
 }
@@ -66,6 +64,8 @@ exports.postNewUserDetails = (req, res, next) => {
     const user = req.body.user;
     const email = req.body.email;
     const password = req.body.password;
+
+    // const {user,email,password}=req.query
     if (invalidInput(email) || invalidInput(password) || invalidInput(user)) {
         return res.status(400).json({ message: 'input can not be empty or undefined' });
     }

@@ -1,14 +1,14 @@
 const path = require('path');
-const fs=require('fs');
+// const fs=require('fs');
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
 const Sequelize = require('sequelize');
 const rootDir = require('./util/path');
 const sequelize = require('./util/database');
-const helmet=require('helmet');
-const compression=require('compression');
-const morgan=require('morgan');
+// const helmet=require('helmet');
+// const compression=require('compression');
+// const morgan=require('morgan');
 
 //models:-->
 const User=require('./models/user');
@@ -27,15 +27,16 @@ const resetPasswordRoute=require('./routers/resetPassword');
 const downloadFilesRoute=require('./routers/allDownloads');
 
 const app = express();
-const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});//login data saving inside a file
+// const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});//login data saving inside a file
 
 //other middlewares:-->>
+
 app.use(cors());
 app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.json({ extended: false }));
-app.use(helmet());
-app.use(compression());
-app.use(morgan('combined',{stream:accessLogStream}));//user loging data
+// app.use(helmet());//getting blocked
+// app.use(compression());
+// app.use(morgan('combined',{stream:accessLogStream}));//user loging data
 
 
 //main middlewares:-->
@@ -68,7 +69,7 @@ sequelize
     // .sync({force:true})
     .sync()
     .then(() => {
-        app.listen(process.env.PORT||3000);
+        app.listen(process.env.PORT || 4000);
     })
     .catch(err=>{
         console.log(err)

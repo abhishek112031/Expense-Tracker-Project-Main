@@ -11,7 +11,7 @@ async function saveToServer(event){
       const info={
         user,email,password
       }
-      const res = await axios.post('http://localhost:3000/user/sign-up',info);
+      const res = await axios.post('/user/sign-up',info);
         // console.log(res.data);
         if(res.status===201){
           console.log(res.data)
