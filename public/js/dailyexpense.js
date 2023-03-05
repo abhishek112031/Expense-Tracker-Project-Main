@@ -49,11 +49,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   try {
     let getResponse = await axios.get("/user/all-expenses", { headers: { "Authorization": token } });
     // console.log(getResponse);
-  pagination(getResponse.data.totalNo, 5);
-  getResponse.data.allExpenses.forEach((x)=>{
-  console.log(x);
-    addExpenseToList(x);
-  })
+    pagination(getResponse.data.totalNo, 5);
+    getResponse.data.allExpenses.forEach((x) => {
+      console.log(x);
+      addExpenseToList(x);
+    })
 
 
     let premiumUser = await axios.get('/premium-user', { headers: { "Authorization": token } });
@@ -76,61 +76,61 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-function pagination(totalExpenses, noOfRows){
-try{
+function pagination(totalExpenses, noOfRows) {
+  try {
     const container = document.querySelector('.pagination');
     container.innerHTML = '';
-    let noOfPages = Math.floor(totalExpenses/noOfRows);
-    if(totalExpenses%noOfRows){
-        noOfPages += 1;
+    let noOfPages = Math.floor(totalExpenses / noOfRows);
+    if (totalExpenses % noOfRows) {
+      noOfPages += 1;
     }
-    for(let i=1; i <= noOfPages; i++){
-        const li = document.createElement('li');
-        li.setAttribute('class', 'page-item');
+    for (let i = 1; i <= noOfPages; i++) {
+      const li = document.createElement('li');
+      li.setAttribute('class', 'page-item');
 
-        const a = document.createElement('a');
-        a.setAttribute('class', 'page-link');
-        a.setAttribute('class', 'btn');
+      const a = document.createElement('a');
+      a.setAttribute('class', 'page-link');
+      a.setAttribute('class', 'btn');
 
-        a.setAttribute("style", "color: #E9E8E8; background-color: #913175; border-color: #CD5888;")
-        a.innerHTML = i;
+      a.setAttribute("style", "color: #E9E8E8; background-color: #913175; border-color: #CD5888;")
+      a.innerHTML = i;
 
-        a.addEventListener('click', async () => {
-          
-          let token=localStorage.getItem('token');
-            const sizeOfPage = document.getElementById('sizeOfPage').value;
-            console.log("size of the page==>",sizeOfPage)
-            axios.get(`/user/all-expenses/?page=${a.innerHTML}&size=${sizeOfPage}`,{ headers: { "Authorization": token } })
-            .then(res => {
-              console.log("response---->",res)
-                arrayOfLists = res.data.allExpenses;
-                document.querySelector('.expenseTableBody').innerHTML = '';
-                arrayOfLists.forEach(list => {
-                    addExpenseToList(list);
-                })
+      a.addEventListener('click', async () => {
+
+        let token = localStorage.getItem('token');
+        const sizeOfPage = document.getElementById('sizeOfPage').value;
+        console.log("size of the page==>", sizeOfPage)
+        axios.get(`/user/all-expenses/?page=${a.innerHTML}&size=${sizeOfPage}`, { headers: { "Authorization": token } })
+          .then(res => {
+            console.log("response---->", res)
+            arrayOfLists = res.data.allExpenses;
+            document.querySelector('.expenseTableBody').innerHTML = '';
+            arrayOfLists.forEach(list => {
+              addExpenseToList(list);
             })
-            .catch(err => {
-                console.log(err);
-            })
-        })
-        li.appendChild(a);
-        container.appendChild(li);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
+      li.appendChild(a);
+      container.appendChild(li);
     }
-}
-catch(err){
+  }
+  catch (err) {
     console.log(err);
-}
+  }
 }
 
-function addExpenseToList(expense){
-try{
+function addExpenseToList(expense) {
+  try {
     const tableBody = document.querySelector('.expenseTableBody');
     const tableRow = document.createElement('tr');
     const rowDate = document.createElement('th');
     const rowAmount = document.createElement('th');
     const rowDescription = document.createElement('td');
     const rowCategory = document.createElement('td');
-    const rowEdit = document.createElement('td');
+    // const rowEdit = document.createElement('td');
     const rowDelete = document.createElement('td');
     rowAmount.setAttribute('scope', 'row');
 
@@ -139,12 +139,12 @@ try{
     rowDescription.innerHTML = expense.description;
     rowCategory.innerHTML = expense.category;
 
-    const editButton = document.createElement('button');
-    editButton.innerHTML = "Edit";
-    editButton.setAttribute("class", "btn btn-success btn-sm  edit")
-    editButton.setAttribute("data-toggle", "modal")
-    editButton.setAttribute("data-target", "#exampleModalCenter")
-    rowEdit.appendChild(editButton);
+    // const editButton = document.createElement('button');
+    // editButton.innerHTML = "Edit";
+    // editButton.setAttribute("class", "btn btn-success btn-sm  edit")
+    // editButton.setAttribute("data-toggle", "modal")
+    // editButton.setAttribute("data-target", "#exampleModalCenter")
+    // rowEdit.appendChild(editButton);
 
     const deleteButton = document.createElement('a');
     deleteButton.innerHTML = "X";
@@ -156,75 +156,126 @@ try{
     tableRow.appendChild(rowAmount);
     tableRow.appendChild(rowDescription);
     tableRow.appendChild(rowCategory);
-    tableRow.appendChild(rowEdit);
+    // tableRow.appendChild(rowEdit);
     tableRow.appendChild(rowDelete);
 
     deleteButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        deleteExpense(expense.id);
-        tableBody.removeChild(tableRow);
+      e.preventDefault();
+      deleteExpense(expense.id);
+      tableBody.removeChild(tableRow);
     })
 
-    editButton.addEventListener('click', () => {
-        document.querySelector('#newAmount').value = expense.amount;
-        document.querySelector('#newDescription').value = expense.description;
-        document.querySelector('#newCategory').value = expense.category;
-        document.querySelector('#id').value = expense.id;
-        document.querySelector('#editForm').setAttribute("onsubmit", `editExpense(this, event)`);
-    });
-}
-catch(err){
+    // editButton.addEventListener('click', () => {
+    //   document.getElementById('form1').style.display = 'none';
+
+    //   const editForm = `<div id="editform" class="col-sm-4 ">
+    
+    //   <form id="form2" >
+    //     <label class="text-dark fw-bold" for="nexpenseAmount">*Expense Amount:</label>
+    //     <input class="form-control mb-3 border-warning border-3" type="number" name="nexpenseAmount" id="nexpenseAmount"
+    //     required>
+    //     <label class="text-dark fw-bold" for="ndescription">*Description:</label>
+    //     <input class="form-control mb-3 border-warning border-3" type="text" name="ndescription" id="ndescription"
+    //       required>
+
+    //     <label class="fw-bold text-dark" for="ncategory">*Choose Category:</label>
+    //     <select class="form-control border-warning border-3 " name="ncategory" id="ncategory" required>
+    //       <option value="Grocery">Grocery</option>
+    //       <option value="Electronics">Electronics</option>
+    //       <option value="Food">Food</option>
+    //       <option value="Movies">Movies</option>
+    //       <option value="Garments">Garments</option>
+    //       <option value="Medicines">Medicines</option>
+    //       <option value="Bills">Bills</option>
+    //       <option value="Fuel">Fuel</option>
+    //       <option value="Others">Others</option>
+    //     </select>
+    //     <button id="btn2" type="submit" class="btn btn-outline-dark btn-info mt-2">Edit Expense</button>
+    //   </form></div>`
+    //   document.getElementById('editDiv').innerHTML = editForm;
+    //   document.querySelector('#nexpenseAmount').value = expense.expenseAmount;
+    //   document.querySelector('#ndescription').value = expense.description;
+    //   document.querySelector('#ncategory').value = expense.category;
+    //   document.querySelector('#id').value = expense.id;
+
+    //   document.getElementById('btn2').addEventListener('click',()=>{
+    //     console.log("form2 is clicked!")
+    //   })
+
+      
+    //   // document.querySelector('#editForm').setAttribute("onsubmit", `editExpense(this, event)`);
+
+    //   // async function editDatabase(event) {
+        
+    //   //   event.preventDefault();
+    //   //   console.log("hiiiiiiiiiiii");
+    //   //   const token = localStorage.getItem('token');
+    //   //   const editedData = {
+    //   //     nexpenseAmount: document.getElementById('nexpenseAmount').value,
+    //   //     ndescription: document.getElementById('ndescription').value,
+    //   //     ncategory: document.getElementById('ncategory').value
+    //   //   }
+
+    //   //   let updateReq = await axios.post(`/user/expense/edit/${expense.id}`, editedData,{ headers: { "Authorization": token } })
+    //   //   console.log("up----", updateReq)
+    //   // }
+    // });
+  }//try end
+
+  catch (err) {
     console.log(err);
-}
+  }
 
 }
+
+//edit functionality:
+
+
 
 const sizeOfPage = document.getElementById("sizeOfPage");
 sizeOfPage.addEventListener("change", async () => {
-try{
+  try {
     updatePagination();
-}
-catch(err){
+  }
+  catch (err) {
     console.log(err);
-}
+  }
 });
 
-async function getExpenses(noOfRows){
-let token=localStorage.getItem('token');
-try{
-  // console.log('hiii')
-    return axios.get(`/user/all-expenses/?page=1&size=${noOfRows}`,{ headers: { "Authorization": token } })
-    .then(res => {
-      console.log("res in getExpenses--->",res)
+async function getExpenses(noOfRows) {
+  let token = localStorage.getItem('token');
+  try {
+    // console.log('hiii')
+    return axios.get(`/user/all-expenses/?page=1&size=${noOfRows}`, { headers: { "Authorization": token } })
+      .then(res => {
+        console.log("res in getExpenses--->", res)
         return (res.data);
-    })
-    .catch(err => console.log(err));
-}
-catch(err){
+      })
+      .catch(err => console.log(err));
+  }
+  catch (err) {
     console.log(err);
-}
+  }
 }
 
 
-async function updatePagination(){
-try{
+async function updatePagination() {
+  try {
     const noOfRows = parseInt(sizeOfPage.options[sizeOfPage.selectedIndex].value);
-    console.log("no of rows===>",noOfRows)
+    console.log("no of rows===>", noOfRows)
     const expensesList = await getExpenses(noOfRows);
     // console.log("expense list--->",expensesList)
     const expensesArray = expensesList.allExpenses;
     document.querySelector('.expenseTableBody').innerHTML = '';
     expensesArray.forEach(list => {
-        addExpenseToList(list);
+      addExpenseToList(list);
     })
     pagination(expensesList.totalNo, noOfRows);
-}
-catch(err){
+  }
+  catch (err) {
     console.log(err);
+  }
 }
-}
-
-
 
 async function deleteExpense(expId) {
   const token = localStorage.getItem('token');
@@ -232,7 +283,7 @@ async function deleteExpense(expId) {
     // async function deleted() {
     try {
       let res = await axios.delete(`/user/expenses/delete/${expId}`, { headers: { "Authorization": token } })
-      removeFromScreen(expId);
+
     }
     catch (err) {
       document.body.innerHTML += `<h3 class="text-center">1st ON delete:something went wrong::ref${err}</h3>`
@@ -245,16 +296,6 @@ async function deleteExpense(expId) {
   }
 
 }
-function removeFromScreen(expId) {
-  const parent = document.getElementById("list");
-  const child = document.getElementById(expId);
-  if (child) {
-    parent.removeChild(child);
-
-
-  }
-}
-
 
 
 //for razorpay:--->

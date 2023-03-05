@@ -171,6 +171,13 @@ exports.getEachUserExpenses=async (req,res,next)=>{
                 [sequelize.fn('COUNT', sequelize.col('id')), 'TOTAL_EXPENSES'],
             ]
         });
+        // //  trial1:-->each user total expense amount:--
+        // const total1 = await req.user.getExpenses({
+        //     attributes: [
+        //         [sequelize.fn('SUM', sequelize.col('expenseAmount')), 'TOTAL_EXPENSES'],
+        //     ]
+        // });
+        // console.log("------>>check===>>",total1);
 
         const totalNo=totalExpenses[0].dataValues.TOTAL_EXPENSES
         // console.log("------>>check===>>",allExpenses,totalNo,isPremium)
@@ -210,7 +217,40 @@ exports.getEachUserExpenses=async (req,res,next)=>{
     
   
 // }
+// exports.editExpense=async (req,res,next)=>{
+//     const nexpenseAmount=req.body.nexpenseAmount;
+//     const ndescription=req.body.ndescription;
+//     const ncategory=req.body.ncategory;
+//     const expid=req.params.expId;
 
+//     try{
+//         const result=await Expense.update({
+//             expenseAmount : nexpenseAmount,
+//             description : ndescription,
+//             category : ncategory
+//         }, { where : {
+//             id : expid
+//         }})
+//         console.log("newexp------>",nexpenseAmount);
+        
+//         //     res.redirect('/user/daily-expenses')
+//         const totalExpenses = await req.user.getExpenses({
+//             attributes: [
+//                 [sequelize.fn('SUM', sequelize.col('expenseAmount')), 'TOTAL'],
+//             ]
+//         });
+//         console.log("total====>>>>>",totalExpenses);
+       
+//         // const userId=req.user.id;
+
+        
+//     }
+//     catch(err){
+//         console.log(err);
+//         res.status(500).json(null);
+//     }
+    
+// }
 exports.deleteExpenseById= async(req,res,next)=>{
     try{
         const t=await sequelize.transaction();
@@ -239,6 +279,10 @@ exports.deleteExpenseById= async(req,res,next)=>{
     }
  
 }
+// exports.editExpense=async(req,res,next)=>{
+//     console.log("edit===>>",req.params.expId);
+// }
+
 exports.getDetailsPage=(req,res)=>{
     res.sendFile(path.join(rootDir,'views','all-details.html'));
 }

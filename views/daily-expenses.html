@@ -25,9 +25,9 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
+          </li> -->
           <li id="details" class="nav-item">
             <a class="nav-link active" aria-current="page" href="/details">Downloads</a>
           </li>
@@ -47,8 +47,13 @@
 
   <h1 class="display-5 text-center text-primary">Add Expenses:</h1>
 
-  <div class="row mt-4 justify-content-center">
-    <div class="col-sm-4 ">
+  
+  <div id="editDiv">
+  </div>
+
+  <div id="form1" class="row mt-4 justify-content-center">
+    
+    <div  class="col-sm-4 ">
       <form onsubmit="saveToDatabase(event)">
 
         <label class="text-dark fw-bold" for="expenseAmount">*Expense Amount:</label>
@@ -86,8 +91,8 @@
     </div>
   </div>
 
-  <h2>Your All Expenses:</h2>
-  <span style="color: #0c0101;">No Of Rows Per Page : </span>
+  <h2 class="text-center">Your All Expenses:🛒</h2>
+  <span style="color: #0c0101;" class="fw-bold text-primary ms-2">No Of Rows Per Page : </span>
   <select name="sizeOfPage" id="sizeOfPage">
     <option value="5">5</option>
     <option value="10">10</option>
@@ -95,7 +100,7 @@
   </select>
   <br>
   <br>
-  <div class="showExpenses">
+  <div class="showExpenses container-fluid">
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
 
@@ -108,7 +113,7 @@
           <th scope="col">Amount</th>
           <th scope="col">Description</th>
           <th scope="col">Category</th>
-          <th scope="col">Edit</th>
+          <!-- <th scope="col">Edit</th> -->
           <th scope="col">Delete</th>
         </tr>
       </thead>

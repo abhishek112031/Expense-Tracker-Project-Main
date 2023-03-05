@@ -11,6 +11,7 @@ router.get('/user/daily-expenses',expenseController.getExpensePage);
 router.post('/user/add-daily-expenses',userAuth,expenseController.postAddExpense );
 router.get('/user/all-expenses',userAuth,expenseController.getEachUserExpenses);
 router.get('/details',expenseController.getDetailsPage);
+// router.post('/user/expense/edit/:expId',userAuth,expenseController.editExpense);
 router.delete('/user/expenses/delete/:Id',userAuth,expenseController.deleteExpenseById);
 
 

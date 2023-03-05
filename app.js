@@ -34,6 +34,7 @@ const app = express();
 app.use(cors());
 app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.json({ extended: false }));
+app.use(bodyParser.urlencoded({extended:false}))
 // app.use(helmet());//getting blocked
 // app.use(compression());
 // app.use(morgan('combined',{stream:accessLogStream}));//user loging data
