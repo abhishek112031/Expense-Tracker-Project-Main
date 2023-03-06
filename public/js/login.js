@@ -16,7 +16,7 @@ async function checkData(event){
     
       if(resp.status===200){
         alert(resp.data.message);
-        console.log(resp.data);
+        // console.log(resp.data);
         localStorage.setItem('token',resp.data.token);
         window.location.href='/user/daily-expenses'
       }

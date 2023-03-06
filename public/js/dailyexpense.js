@@ -51,7 +51,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     // console.log(getResponse);
     pagination(getResponse.data.totalNo, 5);
     getResponse.data.allExpenses.forEach((x) => {
-      console.log(x);
+      // console.log(x);
       addExpenseToList(x);
     })
 
@@ -102,7 +102,7 @@ function pagination(totalExpenses, noOfRows) {
         console.log("size of the page==>", sizeOfPage)
         axios.get(`/user/all-expenses/?page=${a.innerHTML}&size=${sizeOfPage}`, { headers: { "Authorization": token } })
           .then(res => {
-            console.log("response---->", res)
+            // console.log("response---->", res)
             arrayOfLists = res.data.allExpenses;
             document.querySelector('.expenseTableBody').innerHTML = '';
             arrayOfLists.forEach(list => {
@@ -110,7 +110,7 @@ function pagination(totalExpenses, noOfRows) {
             })
           })
           .catch(err => {
-            console.log(err);
+            // console.log(err);
           })
       })
       li.appendChild(a);
@@ -161,8 +161,34 @@ function addExpenseToList(expense) {
 
     deleteButton.addEventListener('click', (e) => {
       e.preventDefault();
-      deleteExpense(expense.id);
-      tableBody.removeChild(tableRow);
+     
+      
+      deleteExpense(expense.id)
+
+      //delete functionality:
+      async function deleteExpense(expId) {
+        const token = localStorage.getItem('token');
+        if (confirm(`Are you sure to delete this Expense?`) === true) {
+          // async function deleted() {
+          try {
+            let res = await axios.delete(`/user/expenses/delete/${expId}`, { headers: { "Authorization": token } })
+            tableBody.removeChild(tableRow);
+          }
+          catch (err) {
+            document.body.innerHTML += `<h3 class="text-center">1st ON delete:something went wrong::ref${err}</h3>`
+      
+          }
+      
+      
+      
+      
+        }
+      
+      }
+
+        
+      
+
     })
 
     // editButton.addEventListener('click', () => {
@@ -248,13 +274,16 @@ async function getExpenses(noOfRows) {
     // console.log('hiii')
     return axios.get(`/user/all-expenses/?page=1&size=${noOfRows}`, { headers: { "Authorization": token } })
       .then(res => {
-        console.log("res in getExpenses--->", res)
+        // console.log("res in getExpenses--->", res)
         return (res.data);
       })
-      .catch(err => console.log(err));
+      .catch(err =>{
+        document.body.innerHTML+=`<h4>Something went wrong!!</h4>`
+      } );
   }
   catch (err) {
-    console.log(err);
+    document.body.innerHTML+=`<h4>Something went wrong!!</h4>`
+
   }
 }
 
@@ -273,29 +302,11 @@ async function updatePagination() {
     pagination(expensesList.totalNo, noOfRows);
   }
   catch (err) {
-    console.log(err);
+    document.body.innerHTML+=`<h4>Something went wrong!!</h4>`
+
   }
 }
 
-async function deleteExpense(expId) {
-  const token = localStorage.getItem('token');
-  if (confirm(`Are you sure to delete this Expense?`) === true) {
-    // async function deleted() {
-    try {
-      let res = await axios.delete(`/user/expenses/delete/${expId}`, { headers: { "Authorization": token } })
-
-    }
-    catch (err) {
-      document.body.innerHTML += `<h3 class="text-center">1st ON delete:something went wrong::ref${err}</h3>`
-
-    }
-
-
-
-
-  }
-
-}
 
 
 //for razorpay:--->
@@ -349,12 +360,15 @@ document.getElementById('rzp-button').onclick = async function (e) {
       }
       catch (err) {
 
+
+        document.body.innerHTML+=`<h4>Something went wrong!!</h4>`
+
       }
     })
   }
   catch (err) {
-    console.log(err.response.data.message);
-    document.body.innerHTML += `<h5 class="text-center text-danger">Error:${err.response.data.message}</h5>`
+    // console.log(err.response.data.message);
+    document.getElementById('errPrem').innerHTML += `<h5 class="text-center text-dark bg-danger">Error:${err.response.data.message}</h5>`
   }
 
 }
@@ -363,7 +377,18 @@ document.getElementById('rzp-button').onclick = async function (e) {
 function showLeaderBoard() {
   const inputElem = document.createElement("input");
   inputElem.type = "button";
-  // inputElem.className="btn"
+  // inputElem.setAttribute('class', 'btn');
+  // inputElem.setAttribute('id', 'btn2');
+
+  // inputElem.setAttribute('class', 'btn-outline-success');
+  inputElem.style.borderRadius='8px';
+  inputElem.style.marginLeft='20px';
+  inputElem.style.backgroundColor='green';
+  inputElem.style.fontWeight="bold"
+
+
+
+
   inputElem.value = 'Show Leader Board:';
 
   inputElem.onclick = async function () {
@@ -373,7 +398,7 @@ function showLeaderBoard() {
       // console.log("leader board----->>>", resp.data);
 
       resp.data.forEach(data => {
-        console.log(data);
+        // console.log(data);
         showLeaderBoardOnScreen(data);
       })
 

@@ -12,6 +12,21 @@
     .page-link :hover{
       cursor: pointer;
     }
+    #lboard{
+      height:200px;
+      width:500px;
+      overflow: hidden;
+      overflow-y:scroll;
+      border: 3px solid rgb(250, 246, 246);
+      border-radius: 12px;
+      justify-content: center;
+      align-items: center;
+      margin-left: 10px;
+    }
+    /* #btn2 :hover{
+      background-color: #31046b;
+      
+    } */
   </style>
 </head>
 
@@ -43,6 +58,7 @@
 
   <div id="premium" class="container-fluid"></div>
   <!-- <button id="details" class="col-md-1 btn btn-outline-dark" >Details</button> -->
+  <div id="errPrem"></div>
 
 
   <h1 class="display-5 text-center text-primary">Add Expenses:</h1>
@@ -85,7 +101,7 @@
     </div>
 
 
-    <div id="leaderBoard1" class="col-sm-4">
+    <div id="leaderBoard1" class="col-md-4">
       <div id="leaderBoard"></div>
       <ol id="lboard"></ol>
     </div>

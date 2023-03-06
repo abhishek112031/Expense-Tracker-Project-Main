@@ -184,7 +184,7 @@ exports.getEachUserExpenses=async (req,res,next)=>{
         res.status(200).json({allExpenses,totalNo,isPremium});
     }
     catch(err){
-        console.log("error on change size--->",err);
+        // console.log("error on change size--->",err);
         res.status(400).json(null);
     }
 }

@@ -13,9 +13,10 @@ exports.purchasePremium = async (req, res) => {
         });
         const amount = 2500;
         rzp.orders.create({ amount, currency: 'INR' }, (err, order) => {
-            console.log(order);
+            // console.log(order);
             if (err) {
-                throw new Error(JSON.stringify(err));
+                // throw new Error(JSON.stringify(err));
+                res.status(401).json({message:'something went wrong! try later '})
             }
             req.user.createOrder({ orderid: order.id, status: 'PENDING' }).then(() => {
                 return res.status(201).json({ order, key_id: rzp.key_id })
@@ -45,7 +46,7 @@ exports.updateTransactionStatus=async(req,res)=>{
             return res.status(202).json({success:true,message:'Transaction Successful'});
         })
         .catch(err=>{
-            throw new Error(err);
+            throw new Error();
         })
 
 
@@ -71,7 +72,7 @@ exports.updateTransactionStatusFailed =async(req,res)=>{
             return res.status(202).json({success:true,message:'Transaction Unsuccessful'});
         })
         .catch(err=>{
-            throw new Error(err);
+            throw new Error();
         })
 
 
