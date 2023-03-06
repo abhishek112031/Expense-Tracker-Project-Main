@@ -4,7 +4,7 @@ async function getNewPassword(event) {
 
 
     const email = { email: document.getElementById('userEmail').value }
-    document.body.innerHTML += `<h5 id="wait" class="mt-4 fw-bold fst-italic text-center text-primary "> please Wait..</h5>`
+    document.body.innerHTML += `<h5 id="wait" class="mt-4 fw-bold fst-italic text-center text-dark bg-light "> please Wait..</h5>`
 
     try {
 

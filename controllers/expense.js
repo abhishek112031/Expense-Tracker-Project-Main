@@ -158,7 +158,7 @@ exports.getEachUserExpenses=async (req,res,next)=>{
                 size : 5
             }
         }
-        console.log("query-->",req.query);
+        // console.log("query-->",req.query);
         const allExpenses = await req.user.getExpenses({
             offset : ((parseInt(req.query.page)-1) * parseInt(req.query.size)),
             limit: parseInt(req.query.size),
@@ -171,7 +171,7 @@ exports.getEachUserExpenses=async (req,res,next)=>{
                 [sequelize.fn('COUNT', sequelize.col('id')), 'TOTAL_EXPENSES'],
             ]
         });
-        // //  trial1:-->each user total expense amount:--
+        // //  trial1:-->each users total expense amount:--
         // const total1 = await req.user.getExpenses({
         //     attributes: [
         //         [sequelize.fn('SUM', sequelize.col('expenseAmount')), 'TOTAL_EXPENSES'],
@@ -251,6 +251,19 @@ exports.getEachUserExpenses=async (req,res,next)=>{
 //     }
     
 // }
+
+exports.totalExpenses=async (req,res)=>{
+       const total = await req.user.getExpenses({
+            attributes: [
+                [sequelize.fn('SUM', sequelize.col('expenseAmount')), 'TOTAL_EXPENSES'],
+            ]
+        });
+        const totalexp=total[0].dataValues.TOTAL_EXPENSES
+        
+        // console.log("========>>",totalexp);
+        res.status(201).json(totalexp)
+
+}
 exports.deleteExpenseById= async(req,res,next)=>{
     try{
         const t=await sequelize.transaction();

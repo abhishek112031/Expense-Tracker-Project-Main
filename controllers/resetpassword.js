@@ -113,7 +113,9 @@ exports.updatePassword = async (req, res, next) => {
                 throw new Error();
             }
             await user.update({ password: hash });
-            res.status(201).json({ message: 'Your Password is Successfuly updated' });
+            // res.status(201).json({ message: 'Your Password is Successfuly updated' });
+            // res.send(`<h3>Your Password is Successfuly updated<h3/>`)
+            res.sendFile(path.join(rootDir,'views','success.html'))
                 
         })
     }

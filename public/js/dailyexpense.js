@@ -49,6 +49,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   try {
     let getResponse = await axios.get("/user/all-expenses", { headers: { "Authorization": token } });
     // console.log(getResponse);
+
+    //g-total:-->>
+    // let totalExpenses= await axios.get('/user/total-expenses',{ headers: { "Authorization": token } });
+    // console.log(totalExpenses.data);
+    Gtotal();
     pagination(getResponse.data.totalNo, 5);
     getResponse.data.allExpenses.forEach((x) => {
       // console.log(x);
@@ -75,6 +80,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
 });
+
+async function Gtotal(){
+  let token = localStorage.getItem('token');
+
+
+  let totalExpenses= await axios.get('/user/total-expenses',{ headers: { "Authorization": token } });
+  document.getElementById('g-total').innerHTML=`<h4 class="text-primary bg-light">Sum Total: ${totalExpenses.data}<h4/>`
+}
 
 function pagination(totalExpenses, noOfRows) {
   try {
@@ -158,12 +171,14 @@ function addExpenseToList(expense) {
     tableRow.appendChild(rowCategory);
     // tableRow.appendChild(rowEdit);
     tableRow.appendChild(rowDelete);
+    Gtotal()
 
     deleteButton.addEventListener('click', (e) => {
       e.preventDefault();
      
       
-      deleteExpense(expense.id)
+      deleteExpense(expense.id);
+      
 
       //delete functionality:
       async function deleteExpense(expId) {
@@ -173,6 +188,7 @@ function addExpenseToList(expense) {
           try {
             let res = await axios.delete(`/user/expenses/delete/${expId}`, { headers: { "Authorization": token } })
             tableBody.removeChild(tableRow);
+            Gtotal()
           }
           catch (err) {
             document.body.innerHTML += `<h3 class="text-center">1st ON delete:something went wrong::ref${err}</h3>`

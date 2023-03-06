@@ -9,6 +9,15 @@
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <!-- <link rel="stylesheet" href="/css/dailyexpense.css"> -->
   <style>
+       body{
+       
+       /* background-image: url("https://images.pexels.com/photos/5417634/pexels-photo-5417634.jpeg?auto=compress&cs=tinysrgb&w=600"); */
+       background-image: url("/images/exp.webp");
+       background-size: cover;
+       background-repeat: no-repeat;
+       background-attachment: fixed;
+     
+     }
     .page-link :hover{
       cursor: pointer;
     }
@@ -23,17 +32,24 @@
       align-items: center;
       margin-left: 10px;
     }
-    /* #btn2 :hover{
-      background-color: #31046b;
-      
-    } */
+  .tr{
+    background-color: rgb(96, 83, 212);
+    border: 5px solid rgb(106, 106, 160);
+   
+  }
+  .expenseTableBody{
+    background-color: rgb(131, 190, 19);
+    border: 1px solid rgb(7, 7, 230);
+   
+
+  }
   </style>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-lg bg-secondary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Day to Day Expenses</a>
+     <span><img class="rounded-pill" height="50" width="50" src="https://img.freepik.com/premium-vector/indian-rupee-gold-coin_1394-2110.jpg?size=338&ext=jpg&ga=GA1.2.2049743831.1672310740&semt=ais"></span> <a class="navbar-brand ms-1" href="#">Day to Day Expenses</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -56,12 +72,13 @@
 
 
 
-  <div id="premium" class="container-fluid"></div>
+  <div id="premium"  class="container-fluid"></div>
   <!-- <button id="details" class="col-md-1 btn btn-outline-dark" >Details</button> -->
   <div id="errPrem"></div>
+  <span id="g-total" class="text-center"></span>
 
 
-  <h1 class="display-5 text-center text-primary">Add Expenses:</h1>
+  <h1 class="display-4 text-center text-primary fst-italic mb-4">🛒Add Expenses:</h1>
 
   
   <div id="editDiv">
@@ -107,8 +124,8 @@
     </div>
   </div>
 
-  <h2 class="text-center">Your All Expenses:🛒</h2>
-  <span style="color: #0c0101;" class="fw-bold text-primary ms-2">No Of Rows Per Page : </span>
+  <h2 class="text-center "><span><img class="rounded-pill" height="50" width="50" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4gsyJCdIRaADPRRSKCzxPISLjT2vLHhHwnQ&usqp=CAU"></span>Your All Expenses:</h2>
+  <span style="color: #0c0101;" class="fw-bold text-dark ms-2 ">✍No Of Rows Per Page : </span>
   <select name="sizeOfPage" id="sizeOfPage">
     <option value="5">5</option>
     <option value="10">10</option>
@@ -122,9 +139,9 @@
 
       </ul>
     </nav>
-    <table class="table expenseTable" style="color: #080000;">
+    <table class="table expenseTable " style="color: #080000;">
       <thead>
-        <tr>
+        <tr class="tr">
           <th scope="col">Date</th>
           <th scope="col">Amount</th>
           <th scope="col">Description</th>
