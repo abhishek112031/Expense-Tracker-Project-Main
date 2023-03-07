@@ -48,11 +48,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   let token = localStorage.getItem('token');
   try {
     let getResponse = await axios.get("/user/all-expenses", { headers: { "Authorization": token } });
-    // console.log(getResponse);
 
-    //g-total:-->>
-    // let totalExpenses= await axios.get('/user/total-expenses',{ headers: { "Authorization": token } });
-    // console.log(totalExpenses.data);
     Gtotal();
     pagination(getResponse.data.totalNo, 5);
     getResponse.data.allExpenses.forEach((x) => {
@@ -74,7 +70,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   }
   catch (err) {
-    document.body.innerHTML += `<h5 class="text-center">1st ON REFRESH:something went wrong::ref${err}</h5>`
+    document.body.innerHTML += `<h5 class="text-center bg-danger text-dark">something went wrong Authorization Required!!</h5>`
 
 
   }
@@ -84,9 +80,25 @@ window.addEventListener('DOMContentLoaded', async () => {
 async function Gtotal(){
   let token = localStorage.getItem('token');
 
+try{
 
   let totalExpenses= await axios.get('/user/total-expenses',{ headers: { "Authorization": token } });
-  document.getElementById('g-total').innerHTML=`<h4 class="text-primary bg-light">Sum Total: ${totalExpenses.data}<h4/>`
+  if(totalExpenses.data==null){
+    document.getElementById('g-total').innerHTML=`<h4 class="text-primary bg-light">Sum Total: 0 <h4/>`
+  }
+  else{
+
+    document.getElementById('g-total').innerHTML=`<h4 class="text-primary bg-light">Sum Total: ${totalExpenses.data}<h4/>`
+  }
+}
+catch(err){
+  document.getElementById('g-total-err').innerHTML=`<h5 class="bg-danger">Sum Total: ${err.response.data.message}<h5/>`;
+  setTimeout(()=>{
+    document.getElementById('g-total-err').innerHTML="";
+  },2000)
+
+
+}
 }
 
 function pagination(totalExpenses, noOfRows) {
@@ -184,7 +196,7 @@ function addExpenseToList(expense) {
       async function deleteExpense(expId) {
         const token = localStorage.getItem('token');
         if (confirm(`Are you sure to delete this Expense?`) === true) {
-          // async function deleted() {
+          
           try {
             let res = await axios.delete(`/user/expenses/delete/${expId}`, { headers: { "Authorization": token } })
             tableBody.removeChild(tableRow);
@@ -307,7 +319,7 @@ async function getExpenses(noOfRows) {
 async function updatePagination() {
   try {
     const noOfRows = parseInt(sizeOfPage.options[sizeOfPage.selectedIndex].value);
-    console.log("no of rows===>", noOfRows)
+    // console.log("no of rows===>", noOfRows)
     const expensesList = await getExpenses(noOfRows);
     // console.log("expense list--->",expensesList)
     const expensesArray = expensesList.allExpenses;
@@ -434,5 +446,10 @@ function showLeaderBoardOnScreen(data) {
   let parentElem = document.getElementById('lboard');
   let childElem = `<li class=" text-center text-primary bg-warning fw-bold mt-2 border border-warning border-2 rounded ">Name: ${data.name} & Total_Expenses: ${data.totalExpenses} ₹ </li>`;
   parentElem.innerHTML += childElem;
+}
+//logout :
+document.querySelector('.logout').onclick=async function(){
+  localStorage.clear();
+  window.location.href='/user/login';
 }
 

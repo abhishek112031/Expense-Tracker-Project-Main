@@ -18,7 +18,17 @@ async function checkData(event){
         alert(resp.data.message);
         // console.log(resp.data);
         localStorage.setItem('token',resp.data.token);
+
         window.location.href='/user/daily-expenses'
+
+        //trial part
+        // let token=localStorage.getItem('token');
+
+        // let resp1= await axios.get('/user/verify',{ headers: { "Authorization": token } })
+        // if (resp1.status===200){
+        //    window.location.href='/user/daily-expenses'
+
+        // }
       }
   }
   

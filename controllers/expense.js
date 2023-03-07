@@ -253,15 +253,20 @@ exports.getEachUserExpenses=async (req,res,next)=>{
 // }
 
 exports.totalExpenses=async (req,res)=>{
-       const total = await req.user.getExpenses({
-            attributes: [
-                [sequelize.fn('SUM', sequelize.col('expenseAmount')), 'TOTAL_EXPENSES'],
-            ]
-        });
-        const totalexp=total[0].dataValues.TOTAL_EXPENSES
-        
-        // console.log("========>>",totalexp);
-        res.status(201).json(totalexp)
+    try{
+
+        const total = await req.user.getExpenses({
+             attributes: [
+                 [sequelize.fn('SUM', sequelize.col('expenseAmount')), 'TOTAL_EXPENSES'],
+             ]
+         });
+         const totalexp=total[0].dataValues.TOTAL_EXPENSES;
+       
+         res.status(201).json(totalexp);
+    }
+    catch(err){
+        res.status(500).json({message:"can not be fetched right now!"})
+    }
 
 }
 exports.deleteExpenseById= async(req,res,next)=>{
@@ -295,6 +300,7 @@ exports.deleteExpenseById= async(req,res,next)=>{
 // exports.editExpense=async(req,res,next)=>{
 //     console.log("edit===>>",req.params.expId);
 // }
+
 
 exports.getDetailsPage=(req,res)=>{
     res.sendFile(path.join(rootDir,'views','all-details.html'));

@@ -131,3 +131,11 @@ exports.postLogInDetails = async (req, res, next) => {
 
 
 };
+
+
+// exports.verifyUser=(req,res)=>{
+//     if(req.user){
+//         return res.status(200).json({message:'user is verified'})
+//     }
+//   return res.status(400).json({message:'user is not verified'})
+// }
