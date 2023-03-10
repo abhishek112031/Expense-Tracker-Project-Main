@@ -15,11 +15,14 @@ async function checkData(event){
     const resp=await axios.post('/user/login',loginData)
     
       if(resp.status===200){
-        alert(resp.data.message);
-        // console.log(resp.data);
-        localStorage.setItem('token',resp.data.token);
+        if(confirm(resp.data.message)){
 
-        window.location.href='/user/daily-expenses'
+          localStorage.setItem('token',resp.data.token);
+  
+          window.location.href='/user/daily-expenses'
+        }
+        // alert(resp.data.message);
+        // console.log(resp.data);
 
         //trial part
         // let token=localStorage.getItem('token');

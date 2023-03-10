@@ -449,7 +449,10 @@ function showLeaderBoardOnScreen(data) {
 }
 //logout :
 document.querySelector('.logout').onclick=async function(){
-  localStorage.clear();
-  window.location.href='/user/login';
+  if(confirm('Click ok to logout')){
+
+    localStorage.clear();
+    window.location.href='/user/login';
+  }
 }
 

@@ -64,7 +64,7 @@ User.hasMany(DownloadedFile);
 DownloadedFile.belongsTo(User)
 
 
-console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV);
 //db table sync/creation:-->
 sequelize
     // .sync({force:true})
